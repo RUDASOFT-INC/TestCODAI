@@ -13,5 +13,8 @@ jobs:
       - name: Initialization
         run: sudo apt-get install -y jq
 
-      - name: Get PR ID
-        run: echo ${{ github.event.pull_request }} | jq .
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github.event.pull_request) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
