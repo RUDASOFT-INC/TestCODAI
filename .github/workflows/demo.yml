@@ -14,4 +14,4 @@ jobs:
         run: echo "Hello World"
 
       - name: Get PR ID
-        run: echo "PR ID is ${{ github.event.pull_request }}"
+        run: printf "PR ID is ${{ github.event.pull_request }}"
