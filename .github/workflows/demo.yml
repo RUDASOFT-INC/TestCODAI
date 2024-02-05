@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Initialization
-        run: apt-get install -y jq
+        run: sudo apt-get install -y jq
 
       - name: Get PR ID
         run: echo ${{ github.event.pull_request }} | jq .
