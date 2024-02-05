@@ -20,7 +20,7 @@ pipeline {
 		}
 		stage('Git') {
 			steps {
-				git credentialsId: '640379b5-1f5f-4560-9d3a-6d76c06f0cf3', url: 'https://github.com/RUDASOFT-INC/codai-service.git'
+				git credentialsId: '640379b5-1f5f-4560-9d3a-6d76c06f0cf3', url: "${GIT_URL}"
 			}
 		}
 		stage('Build') {
