@@ -2,9 +2,8 @@ name: Demo Github action
 
 on:
   pull_request:
-    branches:
-      - main
-        master
+    branches: [main, master]
+    types: [opened, reopened]
 
 jobs:
   build:
