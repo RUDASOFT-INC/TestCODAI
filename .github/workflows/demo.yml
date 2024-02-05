@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: hello world
-        run: echo "Hello World"
+      - name: Initialization
+        run: apt-get install -y jq
 
       - name: Get PR ID
-        run: printf "PR ID is ${{ github.event.pull_request }}"
+        run: echo ${{ github.event.pull_request }} | jq .
