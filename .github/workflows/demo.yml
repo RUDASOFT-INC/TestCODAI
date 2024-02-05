@@ -1,0 +1,14 @@
+name: Demo Github action
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: hello world
+        run: echo "Hello World"
