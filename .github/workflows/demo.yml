@@ -6,7 +6,7 @@ on:
     types: [opened, reopened]
 
 jobs:
-  build:
+  pre-checking:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,4 +14,4 @@ jobs:
         run: echo "Hello World"
 
       - name: Get PR ID
-        run: echo "PR ID is ${{ github.event.pull_request.number }}"
+        run: echo "PR ID is ${{ github.event.pull_request }}"
