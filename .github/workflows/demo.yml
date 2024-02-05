@@ -3,7 +3,8 @@ name: Demo Github action
 on:
   pull_request:
     branches:
-      - master
+      - main
+        master
 
 jobs:
   build:
