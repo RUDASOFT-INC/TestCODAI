@@ -14,7 +14,8 @@ jobs:
         run: sudo apt-get install -y jq
 
       - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github.event.pull_request) }}
+        run: echo ${{ toJson(github.event.pull_request) }}
+
+      - name: Validation
         run: |
-          echo "$GITHUB_CONTEXT"
+          curl -X POST -H 'Content-Type: application/json' -d '{"repo_url": "${{ github.event.pull_request.base.repo.clone_url }}","pull_request_num": "${{ github.event.pull_request.number }}"}'
