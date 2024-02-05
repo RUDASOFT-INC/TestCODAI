@@ -7,7 +7,7 @@ pipeline {
 		stage('Initialize') {
 			steps {
 				script {
-					env.YAML_LOCATION = "${env.JENKINS_WORKSPACE_LOCATION}/ruda_args_kubernetes/codai_service.yml"
+					// env.YAML_LOCATION = "${env.JENKINS_WORKSPACE_LOCATION}/ruda_args_kubernetes/TestCODAI.yml"
 					env.REPO_LOWER_NAME = sh(script: 'echo "$GIT_URL" | sed -En \'s/.*.com\\/(.+?).git/\\1/p\' | tr \'[:upper:]\' \'[:lower:]\'', returnStdout: true).trim()
 					env.IMAGE_TAG = "${REGISTRY_PATH}/${env.REPO_LOWER_NAME}"
 					env.GIT_NAME=sh(script: 'git --no-pager show -s --format="%an" "$GIT_COMMIT"', returnStdout: true).trim()
@@ -37,9 +37,9 @@ pipeline {
 					sh "echo GIT_URL ${GIT_URL}"
 					sh "echo GIT_NAME ${GIT_NAME}"
 					sh "echo GIT_EMAIL ${GIT_EMAIL}"
-					def dirname = sh(script: "dirname ${YAML_LOCATION}", returnStdout: true).trim()
-					sh "cd ${dirname} && git reset --hard HEAD && git pull origin main"
-					sh "sed 's|image:.*|image: '${REGISTRY_PATH}'/'${REPO_LOWER_NAME}':'${GIT_COMMIT}'|' ${YAML_LOCATION} > /tmp/args_'${JOB_NAME}'_'${GIT_COMMIT}'"
+					// def dirname = sh(script: "dirname ${YAML_LOCATION}", returnStdout: true).trim()
+					// sh "cd ${dirname} && git reset --hard HEAD && git pull origin main"
+					// sh "sed 's|image:.*|image: '${REGISTRY_PATH}'/'${REPO_LOWER_NAME}':'${GIT_COMMIT}'|' ${YAML_LOCATION} > /tmp/args_'${JOB_NAME}'_'${GIT_COMMIT}'"
 				}
 			}
 		}
