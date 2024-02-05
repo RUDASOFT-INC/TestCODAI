@@ -18,4 +18,4 @@ jobs:
 
       - name: Validation
         run: |
-          curl -X POST -H 'Content-Type: application/json' -d '{"repo_url": "${{ github.event.pull_request.base.repo.clone_url }}","pull_request_num": "${{ github.event.pull_request.number }}"}'
+          curl -X POST -H 'Content-Type: application/json' -d '{"repo_url": "${{ github.event.pull_request.base.repo.clone_url }}","pull_request_num": "${{ github.event.pull_request.number }}"}' http://45.121.161.72:32001/validate/
