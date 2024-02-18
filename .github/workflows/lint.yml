@@ -22,7 +22,7 @@ jobs:
       - name: Run lint check
         shell: bash
         run: |
-          IFS=' ' read -r -a files <<< "${{ inputs.files }}"
+          IFS=' ' read -r -a files <<< "${{ steps.getfile.outputs.files }}"
           for file in "${files[@]}"; do
             if [[ "$file" == *.js ]]; then
               # Replace the following line with your JavaScript linter
