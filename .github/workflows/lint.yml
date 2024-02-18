@@ -1,0 +1,54 @@
+name: Lint and Comment
+
+on:
+  pull_request:
+    branches: [main, master]
+    types: [opened, reopened]
+
+jobs:
+  lint-and-comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Get list of changed files
+        id: getfile
+        run: |
+          echo "::set-output name=files::$(git diff --name-only HEAD^ HEAD)"
+
+      - name: Run lint check
+        shell: bash
+        run: |
+          IFS=' ' read -r -a files <<< "${{ inputs.files }}"
+          for file in "${files[@]}"; do
+            if [[ "$file" == *.js ]]; then
+              # Replace the following line with your JavaScript linter
+              eslint "$file" > lint-result.txt || true
+            elif [[ "$file" == *.py ]]; then
+              # Replace the following line with your Python linter
+              pylint "$file" > lint-result.txt || true
+            fi
+          done
+
+      - name: Add comments to PR
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const lintResult = fs.readFileSync('lint-result.txt', 'utf8');
+            const errors = lintResult.split('\n');
+            for (const error of errors) {
+              if (error) {
+                const [file, line, , message] = error.split(':');
+                github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: `Lint error in \`${file}\` at line ${line}: ${message}`
+                });
+              }
+            }
