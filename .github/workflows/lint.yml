@@ -17,7 +17,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm ci
+      - run: |
+          npm i eslint && npm init @eslint/config
 
       - name: Get list of changed files
         id: getfile
