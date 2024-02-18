@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 16
       - run: |
-          npm i eslint && npm init @eslint/config
+          npm init @eslint/config -- --config semistandard
 
       - name: Get list of changed files
         id: getfile
