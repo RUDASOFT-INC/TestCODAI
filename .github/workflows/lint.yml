@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 16
       - run: |
-          npm init @eslint/config -- --config semistandard
+          npm i eslint && touch .eslintrc.js
 
       - name: Get list of changed files
         id: getfile
@@ -32,7 +32,7 @@ jobs:
           for file in "${files[@]}"; do
             if [[ "$file" == *.js ]]; then
               # Replace the following line with your JavaScript linter
-              eslint "$file" > lint-result.txt || true
+              npx eslint "$file" > lint-result.txt || true
             elif [[ "$file" == *.py ]]; then
               # Replace the following line with your Python linter
               pylint "$file" > lint-result.txt || true
