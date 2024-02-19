@@ -7,7 +7,7 @@ on:
 
 jobs:
   lint-and-comment:
-    runs-on: github-runner-798f86dcc9-grsgq
+    runs-on: self-hosted
     steps:
       - name: Echo
         shell: bash
