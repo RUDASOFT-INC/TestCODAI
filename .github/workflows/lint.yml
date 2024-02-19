@@ -7,51 +7,9 @@ on:
 
 jobs:
   lint-and-comment:
-    runs-on: ubuntu-latest
+    runs-on: github-runner-798f86dcc9-grsgq
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-
-      - name: Install dependencies
-        run: |
-          pwd
-          npm install eslint eslint-plugin-react@latest @babel/eslint-parser @babel/preset-env @babel/preset-react
-          wget https://gist.githubusercontent.com/hairbui76/ad58008e45a0890b34ccedbaca863573/raw/b35fc4f4e1f9db348ed25c3e5c2864452f63d910/.eslintrc.json
-          wget https://gist.githubusercontent.com/hairbui76/ad58008e45a0890b34ccedbaca863573/raw/317591bcb57af20f7164fe6749c5286ea923f87b/eslint-formatter.js
-          pip install flake8
-
-      - name: Get list of changed files
-        id: getfile
-        run: |
-          echo "::set-output name=files::$(git diff --name-only HEAD^ HEAD)"
-
-      - name: Run lint check
-        shell: bash
-        run: |
-          IFS=' ' read -r -a files <<< "${{ steps.getfile.outputs.files }}"
-          for file in "${files[@]}"; do
-            if [[ "$file" == *.js ]]; then
-              # Replace the following line with your JavaScript linter
-              npx eslint -f ./eslint-formatter.js "$file" > lint-result.txt || true
-            elif [[ "$file" == *.py ]]; then
-              # Replace the following line with your Python linter
-              flake8 "$file" > lint-result.txt || true
-            fi
-          done
-
       - name: Echo
         shell: bash
         run: |
-          cat lint-result.txt
+          echo hello
