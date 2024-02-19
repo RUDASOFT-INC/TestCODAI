@@ -26,7 +26,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install eslint eslint-plugin-react@latest @babel/eslint-parser
+          npm install eslint eslint-plugin-react@latest @babel/eslint-parser @babel/preset-env
           wget https://gist.githubusercontent.com/hairbui76/ad58008e45a0890b34ccedbaca863573/raw/b35fc4f4e1f9db348ed25c3e5c2864452f63d910/.eslintrc.json
           pip install flake8
 
