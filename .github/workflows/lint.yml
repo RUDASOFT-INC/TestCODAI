@@ -26,6 +26,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          pwd
           npm install eslint eslint-plugin-react@latest @babel/eslint-parser @babel/preset-env @babel/preset-react
           wget https://gist.githubusercontent.com/hairbui76/ad58008e45a0890b34ccedbaca863573/raw/b35fc4f4e1f9db348ed25c3e5c2864452f63d910/.eslintrc.json
           wget https://gist.githubusercontent.com/hairbui76/ad58008e45a0890b34ccedbaca863573/raw/317591bcb57af20f7164fe6749c5286ea923f87b/eslint-formatter.js
