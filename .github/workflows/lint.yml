@@ -14,11 +14,20 @@ jobs:
         with:
           fetch-depth: 2
 
-      - uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 16
-      - run: |
-          npm i eslint && touch .eslintrc.js
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: |
+          npm install eslint
+          pip install flake8
 
       - name: Get list of changed files
         id: getfile
@@ -35,7 +44,7 @@ jobs:
               npx eslint "$file" > lint-result.txt || true
             elif [[ "$file" == *.py ]]; then
               # Replace the following line with your Python linter
-              pylint "$file" > lint-result.txt || true
+              flake8 "$file" > lint-result.txt || true
             fi
           done
 
