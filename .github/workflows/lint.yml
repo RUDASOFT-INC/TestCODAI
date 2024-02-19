@@ -26,7 +26,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install eslint eslint-plugin-react@latest
+          npm install eslint eslint-plugin-react@latest @babel/eslint-parser
           wget https://gist.githubusercontent.com/hairbui76/ad58008e45a0890b34ccedbaca863573/raw/b35fc4f4e1f9db348ed25c3e5c2864452f63d910/.eslintrc.json
           pip install flake8
 
@@ -49,22 +49,7 @@ jobs:
             fi
           done
 
-      - name: Add comments to PR
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const fs = require('fs');
-            const lintResult = fs.readFileSync('lint-result.txt', 'utf8');
-            const errors = lintResult.split('\n');
-            for (const error of errors) {
-              if (error) {
-                const [file, line, , message] = error.split(':');
-                github.rest.issues.createComment({
-                  issue_number: context.issue.number,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  body: `Lint error in \`${file}\` at line ${line}: ${message}`
-                });
-              }
-            }
+      - name: Echo
+        shell: bash
+        run: |
+          cat lint-result.txt
