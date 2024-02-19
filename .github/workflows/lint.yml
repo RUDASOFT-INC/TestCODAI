@@ -28,6 +28,7 @@ jobs:
         run: |
           npm install eslint eslint-plugin-react@latest @babel/eslint-parser @babel/preset-env @babel/preset-react
           wget https://gist.githubusercontent.com/hairbui76/ad58008e45a0890b34ccedbaca863573/raw/b35fc4f4e1f9db348ed25c3e5c2864452f63d910/.eslintrc.json
+          wget https://gist.githubusercontent.com/hairbui76/ad58008e45a0890b34ccedbaca863573/raw/31e32878863ccc7ff52f771a65968684b7c48bc8/eslint-formatter.js
           pip install flake8
 
       - name: Get list of changed files
@@ -42,7 +43,7 @@ jobs:
           for file in "${files[@]}"; do
             if [[ "$file" == *.js ]]; then
               # Replace the following line with your JavaScript linter
-              npx eslint "$file" > lint-result.txt || true
+              npx eslint -f eslint-formatter.js "$file" > lint-result.txt || true
             elif [[ "$file" == *.py ]]; then
               # Replace the following line with your Python linter
               flake8 "$file" > lint-result.txt || true
