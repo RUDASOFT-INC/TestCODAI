@@ -40,7 +40,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const script = require(`${VALIDATION_PATH}/script.js`);
+            const script = require(`${process.env.VALIDATION_PATH}/script.js`);
             script(process.env.FILES);
         env:
           FILES: ${{ steps.getfile.outputs.files }}
