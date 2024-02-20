@@ -14,10 +14,17 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Get list of changed files
-        id: getfile
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v42
+
+      - name: List all changed files
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
-          echo "::set-output name=files::$(git diff --name-only HEAD^ HEAD)"
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "$file was changed"
+          done
 
       - name: Run lint check
         shell: bash
