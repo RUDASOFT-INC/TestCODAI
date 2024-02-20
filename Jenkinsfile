@@ -32,7 +32,6 @@ pipeline {
         }
 				script {
 					sh "echo GIT_COMMIT ${GIT_COMMIT}"
-					sh "echo GIT_CHANGE_ID ${GIT_CHANGE_ID}"
 					sh "echo GIT_BRANCH ${GIT_BRANCH}"
 					sh "echo GIT_URL ${GIT_URL}"
 					sh "echo GIT_NAME ${GIT_NAME}"
