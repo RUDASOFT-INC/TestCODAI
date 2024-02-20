@@ -44,9 +44,6 @@ jobs:
             for (const error of errors) {
               if (error) {
                 const [file, line, type, message] = error.split(':');
-                console.log(process.cwd());
-                console.log(file);
-                console.log(file.replace(process.cwd()));
                 github.rest.pulls.createReviewComment({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
@@ -54,7 +51,7 @@ jobs:
                   line: parseInt(line),
                   body: `${type}: ${message}`,
                   commit_id: context.payload.pull_request.head.sha,
-                  path: file,
+                  path: file.replace(process.cwd() + "/", ""),
                 });
               }
             }
