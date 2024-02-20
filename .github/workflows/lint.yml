@@ -25,8 +25,8 @@ jobs:
           touch lint_files.txt
           for file in "${files[@]}"; do
             if [[ "$file" == *.js ]]; then
-              echo ${$(basename -- "$file")%.*}.txt
-              lint_file=${"$(basename -- "$file")"%.*}.txt
+              echo "${$(basename -- "$file")%.*}.txt"
+              lint_file="${"$(basename -- "$file")"%.*}.txt"
               echo $lint_file >> lint_files.txt
               # Replace the following line with your JavaScript linter
               cp $VALIDATION_PATH/js/.eslintrc.json .
