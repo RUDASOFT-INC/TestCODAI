@@ -26,7 +26,8 @@ jobs:
           for file in "${files[@]}"; do
             if [[ "$file" == *.js ]]; then
               # Replace the following line with your JavaScript linter
-              npx eslint -f $VALIDATION_PATH/js/eslint-formatter.js "$file" > lint-result.txt || true
+              cp $VALIDATION_PATH/js/.eslintrc.json .
+              npx eslint -f $VALIDATION_PATH/js/eslint-formatter.js "$file" > lint-result.txt
             elif [[ "$file" == *.py ]]; then
               # Replace the following line with your Python linter
               flake8 "$file" > lint-result.txt || true
