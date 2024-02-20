@@ -8,11 +8,6 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Check env
-        run: |
-          echo ${{ secrets.JENKINS_URL }}
-          echo ${{ secrets.JENKINS_USER }}
-          echo ${{ secrets.JENKINS_API_TOKEN }}
       - name: trigger single Job
         uses: appleboy/jenkins-action@master
         with:
