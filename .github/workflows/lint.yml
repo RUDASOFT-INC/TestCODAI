@@ -41,17 +41,22 @@ jobs:
             const fs = require('fs');
             const lintResult = fs.readFileSync('lint-result.txt', 'utf8');
             const errors = lintResult.split('\n');
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const pullNumber = context.payload.pull_request.number;
+            const currentDir = process.cwd() + "/";
+            const commitId = context.payload.pull_request.head.sha;
             for (const error of errors) {
               if (error) {
                 const [file, line, type, message] = error.split(':');
                 github.rest.pulls.createReviewComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  pull_number: context.payload.pull_request.number,
+                  owner,
+                  repo,
+                  pull_number: pullNumber,
                   line: parseInt(line),
                   body: `${type}: ${message}`,
-                  commit_id: context.payload.pull_request.head.sha,
-                  path: file.replace(process.cwd() + "/", ""),
+                  commit_id: commitId,
+                  path: file.replace(currentDir, ""),
                 });
               }
             }
