@@ -1,0 +1,62 @@
+name: Lint and Comment
+
+on:
+  pull_request:
+    branches: [main, master]
+    types: [opened, reopened]
+
+jobs:
+  lint-and-comment:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Get list of changed files
+        id: getfile
+        run: |
+          echo "::set-output name=files::$(git diff --name-only HEAD^ HEAD)"
+      - name: Run lint check
+        shell: bash
+        run: |
+          IFS=' ' read -r -a files <<< "${{ steps.getfile.outputs.files }}"
+          for file in "${files[@]}"; do
+            echo $file
+            if [[ "$file" == *.js ]]; then
+              # Replace the following line with your JavaScript linter
+              cp $VALIDATION_PATH/js/.eslintrc.json .
+              npx eslint --resolve-plugins-relative-to=/usr/lib/node_modules -f $VALIDATION_PATH/js/formatter.js "$file" > lint-result.txt || true
+            elif [[ "$file" == *.py ]]; then
+              # Replace the following line with your Python linter
+              flake8 "$file" > lint-result.txt || true
+            fi
+          done
+      - name: Add comments to PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const lintResult = fs.readFileSync('lint-result.txt', 'utf8');
+            const errors = lintResult.split('\n');
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const pullNumber = context.payload.pull_request.number;
+            const currentDir = process.cwd() + "/";
+            const commitId = context.payload.pull_request.head.sha;
+            for (const error of errors) {
+              if (error) {
+                const [file, line, type, message] = error.split(':');
+                github.rest.pulls.createReviewComment({
+                  owner,
+                  repo,
+                  pull_number: pullNumber,
+                  line: parseInt(line),
+                  body: `${type}: ${message}`,
+                  commit_id: commitId,
+                  path: file.replace(currentDir, ""),
+                });
+              }
+            }
