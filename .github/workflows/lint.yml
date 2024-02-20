@@ -21,14 +21,11 @@ jobs:
       - name: Run lint check
         shell: bash
         run: |
-          pwd
           IFS=' ' read -r -a files <<< "${{ steps.getfile.outputs.files }}"
-          echo "${files[@]}"
           for file in "${files[@]}"; do
             echo $file
             if [[ "$file" == *.js ]]; then
               # Replace the following line with your JavaScript linter
-              ls
               cp $VALIDATION_PATH/js/.eslintrc.json .
               npx eslint -f $VALIDATION_PATH/js/eslint-formatter.js "$file"
             elif [[ "$file" == *.py ]]; then
