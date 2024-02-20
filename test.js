@@ -10,7 +10,3 @@ function getUserInfo() {
 function getClientData() {
 	return;
 }
-
-function getCustomerRecord() {
-	return;
-}
