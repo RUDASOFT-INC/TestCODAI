@@ -26,7 +26,7 @@ jobs:
           for file in "${files[@]}"; do
             echo "${"$(basename -- "$file")"%.*}".txt
             # if [[ "$file" == *.js ]]; then
-            #   lint_file="${"$(basename -- "$file")"%.*}.txt"
+            #   lint_file=$(basename -- "$file" | sed 's/\.[^.]*$//').txt
             #   echo $lint_file >> lint_files.txt
             #   # Replace the following line with your JavaScript linter
             #   cp $VALIDATION_PATH/js/.eslintrc.json .
