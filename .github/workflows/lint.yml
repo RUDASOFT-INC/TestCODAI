@@ -14,9 +14,9 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v42
+      - name: Find changed lines
+        id: changed_lines
+        uses: hestonhoffman/changed-lines@v1
 
       - name: Run lint check
         shell: bash
@@ -36,7 +36,7 @@ jobs:
             fi
           done
         env:
-          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+          ALL_CHANGED_FILES: ${{ steps.changed_lines.outputs.changed_files }}
 
       - name: Add comments to PR
         uses: actions/github-script@v7
@@ -46,4 +46,4 @@ jobs:
             const script = require(`${process.env.VALIDATION_PATH}/script.js`);
             script(github, context);
         env:
-          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+          ALL_CHANGED_FILES_WITH_LINES: ${{ steps.changed_lines.outputs.changed_lines }}
