@@ -26,7 +26,7 @@ jobs:
           for file in "${files[@]}"; do
             if [[ "$file" == *.js ]]; then
               lint_file=$(basename -- "$file" | sed 's/\.[^.]*$//').txt
-              echo "$lint_file $(wc -l $file)" >> lint_files.txt
+              echo "$lint_file $(wc -l < $file)" >> lint_files.txt
               # Replace the following line with your JavaScript linter
               cp $VALIDATION_PATH/js/.eslintrc.json .
               npx eslint --resolve-plugins-relative-to=/usr/lib/node_modules -f $VALIDATION_PATH/js/formatter.js "$file" > $lint_file || true
@@ -35,7 +35,6 @@ jobs:
               flake8 "$file" > lint-result.txt || true
             fi
           done
-          cat lint_files.txt
         env:
           ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
 
