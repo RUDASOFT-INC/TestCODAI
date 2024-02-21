@@ -24,8 +24,8 @@ jobs:
           IFS=' ' read -r -a files <<< "$ALL_CHANGED_FILES"
           touch lint_files.txt
           for file in "${files[@]}"; do
+            echo "${"$(basename -- "$file")"%.*}".txt
             if [[ "$file" == *.js ]]; then
-              echo "${"$(basename -- "$file")"%.*}".txt
               lint_file="${"$(basename -- "$file")"%.*}.txt"
               echo $lint_file >> lint_files.txt
               # Replace the following line with your JavaScript linter
