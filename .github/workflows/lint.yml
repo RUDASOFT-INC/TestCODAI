@@ -24,7 +24,7 @@ jobs:
           IFS=' ' read -r -a files <<< "$ALL_CHANGED_FILES"
           touch lint_files.txt
           for file in "${files[@]}"; do
-            echo "${"$(basename -- "$file")"%.*}".txt
+            echo $(basename -- "$file" | sed 's/\.[^.]*$//').txt
             # if [[ "$file" == *.js ]]; then
             #   lint_file=$(basename -- "$file" | sed 's/\.[^.]*$//').txt
             #   echo $lint_file >> lint_files.txt
