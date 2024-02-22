@@ -22,7 +22,6 @@ jobs:
       - name: Run lint check
         shell: bash
         run: |
-          echo $ALL_CHANGED_FILES
           IFS=' ' read -r -a files <<< "$(echo $(jq -r 'keys[]' <<< cat changed_files.json))"
           touch lint_files.txt
           for file in "${files[@]}"; do
@@ -45,5 +44,3 @@ jobs:
           script: |
             const script = require(`${process.env.VALIDATION_PATH}/script.js`);
             script(github, context);
-        env:
-          ALL_CHANGED_FILES_WITH_LINES: ${{ steps.changed_lines.outputs.changed_lines }}
