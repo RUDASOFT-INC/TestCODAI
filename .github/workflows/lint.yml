@@ -22,7 +22,7 @@ jobs:
       - name: Run lint check
         shell: bash
         run: |
-          jq -r 'keys[]' <<< echo $ALL_CHANGED_FILES
+          IFS='\n' read -r -a files <<< echo $(jq -r 'keys[]' <<< echo $ALL_CHANGED_FILES)
           touch lint_files.txt
           for file in "${files[@]}"; do
             if [[ "$file" == *.js ]]; then
