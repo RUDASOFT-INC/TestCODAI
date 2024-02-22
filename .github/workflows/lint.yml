@@ -17,11 +17,12 @@ jobs:
       - name: Get lines of files changed
         id: get_lines
         run: |
-          git diff --unified=0 "HEAD^..HEAD" | perl -ne 'BEGIN { my %h; } if (/^diff --git a\/(.*) b\/.*/) { $f=$1; } elsif (/^\@\@ -\d+(,\d+)? \+(\d+)(,(\d+))? \@\@/) { $o=$2; $n=$4; for ($i = 0; $i < $n; $i++) { $h{$f}->{int($o)}++; $o++; } } END { use JSON; my %result; while (my ($k, $v) = each %h) { my @lines = sort {$a <=> $b} map { int($_) } keys %$v; $result{$k} = \@lines; } print encode_json \%result; }'
+          echo "::set-output name=files_with_lines::$(git diff --unified=0 HEAD^..HEAD | perl -ne 'BEGIN { my %h; } if (/^diff --git a\/(.*) b\/.*/) { $f=$1; } elsif (/^\@\@ -\d+(,\d+)? \+(\d+)(,(\d+))? \@\@/) { $o=$2; $n=$4; for ($i = 0; $i < $n; $i++) { $h{$f}->{int($o)}++; $o++; } } END { use JSON; my %result; while (my ($k, $v) = each %h) { my @lines = sort {$a <=> $b} map { int($_) } keys %$v; $result{$k} = \@lines; } print encode_json \%result; }'"
 
       - name: Run lint check
         shell: bash
         run: |
+          echo $ALL_CHANGED_FILES
           IFS='\n' read -r -a files <<< echo $(jq -r 'keys[]' <<< echo $ALL_CHANGED_FILES)
           touch lint_files.txt
           for file in "${files[@]}"; do
@@ -37,7 +38,7 @@ jobs:
             fi
           done
         env:
-          ALL_CHANGED_FILES: ${{ steps.get_lines.outputs }}
+          ALL_CHANGED_FILES: ${{ steps.get_lines.outputs.files_with_lines }}
 
       - name: Add comments to PR
         uses: actions/github-script@v7
