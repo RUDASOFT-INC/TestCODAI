@@ -14,14 +14,17 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Find changed lines
-        id: changed_lines
-        uses: hestonhoffman/changed-lines@v1
+      - name: Get lines of files changed
+        id: get_lines
+        run: |
+          git diff --unified=0 "HEAD^..HEAD@{4}" | perl -ne 'BEGIN { my %h; } if (
+          /^diff --git a\/(.*) b\/.*/) { $f=$1; } elsif (/^\@\@ -\d+(,\d+)? \+(\d+)(,(\d+))? \@\@/) { $o=$2; $n=$4; for ($i = 0; $i < $n; $i++) { $h{$f}->{int($o)}++; $o++; } } END { use JSON; my %result; while (my ($k, $v) = each %h) { my @lines = sor
+          t {$a <=> $b} map { int($_) } keys %$v; $result{$k} = \@lines; } print encode_json \%result; }'
 
       - name: Run lint check
         shell: bash
         run: |
-          IFS=' ' read -r -a files <<< "$ALL_CHANGED_FILES"
+          jq -r 'keys[]' <<< echo $ALL_CHANGED_FILES
           touch lint_files.txt
           for file in "${files[@]}"; do
             if [[ "$file" == *.js ]]; then
@@ -36,7 +39,7 @@ jobs:
             fi
           done
         env:
-          ALL_CHANGED_FILES: ${{ steps.changed_lines.outputs.changed_files }}
+          ALL_CHANGED_FILES: ${{ steps.get_lines.outputs }}
 
       - name: Add comments to PR
         uses: actions/github-script@v7
