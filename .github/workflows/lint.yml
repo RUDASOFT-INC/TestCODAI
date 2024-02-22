@@ -14,21 +14,23 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Get list of changed files
-        id: getfile
+      - name: Get lines of files changed
+        id: get_lines
         run: |
-          echo "::set-output name=files::$(git diff --name-only HEAD^ HEAD)"
+          git diff --unified=0 HEAD^..HEAD | perl -ne 'BEGIN { my %h; } if (/^diff --git a\/(.*) b\/.*/) { $f=$1; } elsif (/^\@\@ -\d+(,\d+)? \+(\d+)(,(\d+))? \@\@/) { $o=$2; $n=$4; for ($i = 0; $i < $n; $i++) { $h{$f}->{int($o)}++; $o++; } } END { use JSON; my %result; while (my ($k, $v) = each %h) { my @lines = sort {$a <=> $b} map { int($_) } keys %$v; $result{$k} = \@lines; } print encode_json \%result; }' > changed_files.json
 
       - name: Run lint check
         shell: bash
         run: |
-          IFS=' ' read -r -a files <<< "${{ steps.getfile.outputs.files }}"
+          IFS=' ' read -r -a files <<< "$(echo $(jq -r 'keys[]' <<< cat changed_files.json))"
+          touch lint_files.txt
           for file in "${files[@]}"; do
-            echo $file
             if [[ "$file" == *.js ]]; then
+              lint_file=$(basename -- "$file" | sed 's/\.[^.]*$//').txt
+              echo "$lint_file $(wc -l $file)" >> lint_files.txt
               # Replace the following line with your JavaScript linter
               cp $VALIDATION_PATH/js/.eslintrc.json .
-              npx eslint --resolve-plugins-relative-to=/usr/lib/node_modules -f $VALIDATION_PATH/js/formatter.js "$file" > "$file"_lint.txt || true
+              npx eslint --resolve-plugins-relative-to=/usr/lib/node_modules -f $VALIDATION_PATH/js/formatter.js "$file" > $lint_file || true
             elif [[ "$file" == *.py ]]; then
               # Replace the following line with your Python linter
               flake8 "$file" > lint-result.txt || true
@@ -40,7 +42,5 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const script = require('./script.js');
-            script(process.env.FILES);
-        env:
-          FILES: ${{ steps.getfile.outputs.files }}
+            const script = require(`${process.env.VALIDATION_PATH}/script.js`);
+            script(github, context);

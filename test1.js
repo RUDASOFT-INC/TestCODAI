@@ -6,11 +6,3 @@ const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
 function getUserInfo() {
 	return;
 }
-
-function getClientData() {
-	return;
-}
-
-function getCustomerRecord() {
-	return;
-}
