@@ -17,7 +17,7 @@ jobs:
       - name: Get lines of files changed
         id: get_lines
         run: |
-          git diff --unified=0 "HEAD^..HEAD@{4}" | perl -ne 'BEGIN { my %h; } if (
+          git diff --unified=0 "HEAD^..HEAD" | perl -ne 'BEGIN { my %h; } if (
           /^diff --git a\/(.*) b\/.*/) { $f=$1; } elsif (/^\@\@ -\d+(,\d+)? \+(\d+)(,(\d+))? \@\@/) { $o=$2; $n=$4; for ($i = 0; $i < $n; $i++) { $h{$f}->{int($o)}++; $o++; } } END { use JSON; my %result; while (my ($k, $v) = each %h) { my @lines = sor
           t {$a <=> $b} map { int($_) } keys %$v; $result{$k} = \@lines; } print encode_json \%result; }'
 
