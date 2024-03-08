@@ -29,7 +29,7 @@ jobs:
               lint_file=$(basename -- "$file" | sed 's/\.[^.]*$//').txt
               echo "$lint_file $(wc -l $file)" >> lint_files.txt
               # Replace the following line with your JavaScript linter
-              cp $VALIDATION_PATH/js/eslint.config.js .
+              cp $VALIDATION_PATH/js/* .
               NODE_PATH=$NODE_PATH ESLINT_USE_FLAT_CONFIG=true npx eslint -f $VALIDATION_PATH/js/formatter.js "$file" > $lint_file || true
             elif [[ "$file" == *.py ]]; then
               # Replace the following line with your Python linter
