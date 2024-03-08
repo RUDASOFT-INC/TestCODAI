@@ -30,7 +30,7 @@ jobs:
               echo "$lint_file $(wc -l $file)" >> lint_files.txt
               # Replace the following line with your JavaScript linter
               cp $VALIDATION_PATH/js/* .
-              NODE_PATH=$NODE_PATH ESLINT_USE_FLAT_CONFIG=true npx eslint -f formatter.js "$file" > $lint_file || true
+              ESLINT_USE_FLAT_CONFIG=true $NODE_PATH/eslint/bin/eslint.js -f ./formatter.js "$file" > $lint_file || true
             elif [[ "$file" == *.py ]]; then
               # Replace the following line with your Python linter
               flake8 "$file" > lint-result.txt || true
